@@ -1,0 +1,15 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+fleet.Rproj
+metiers_exist.rds
+
+data/
+references/
+
+*.rds
+*.html
+*.csv
+*.xlsx
+
