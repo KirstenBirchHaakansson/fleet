@@ -40,6 +40,7 @@ for (i in years) {
         merged_metier_level6,
         metier_level_6_new,
         metier_level_6_new_mrk,
+        fdfmark,
         art,
         ltilst,
         anvend
