@@ -1,0 +1,141 @@
+---
+title: "Fleet, reference table, documentation"
+author: "Kirsten Birch Håkansson, DTU Aqua"
+date: "\today"
+output:
+  pdf_document: default
+---
+
+
+
+```{r setup, include = F}
+knitr::opts_chunk$set(echo = TRUE, message = F, warnings = F)
+
+library(dplyr)
+library(lubridate)
+
+options(scipen = 999)
+
+path_out <- "Q:/mynd/SAS Library/fleet/" 
+filename_out <- "fleet_old_metiers"
+
+library(dplyr)
+library(lubridate)
+
+years <- c(1987:2024)
+
+```
+
+# Data 
+
+Input a list of all metiers used 1987-2018
+
+```{r data, eval = T}
+
+
+# rdb <- read.csv("Q:/mynd/SAS Library/FiskeriAktiviteter/references/RDB/AreaCodeFACCodeRegion.csv")
+# 
+# #A bit of renaming and deletion of id's not needed presently
+# 
+# rdb <- select(rename(rdb, area = AreaCode, metier_lvl6 = FishingActivityCategoryEuropeanLvl6Code), area, metier_lvl6)
+
+dfad <- readRDS("Q:/mynd/SAS Library/fleet/data/metiers_exist.rds")
+
+dfad_sum <- summarise(group_by(dfad, fao_area, merged_metier_level6, fdfmark, metier_level6_ret), 
+                      kg = sum(kg), trips = sum(trips))
+
+fleet <- dfad_sum
+
+```
+
+
+# mixfish_fleet
+
+Also need a mixfish_fleet for saithe, haddock and cod
+
+```{r}
+
+mix <-
+    mutate(fleet,
+           metier_in = ifelse(
+             is.na(merged_metier_level6) | merged_metier_level6 == "",
+             metier_level6_ret ,
+             merged_metier_level6
+           ))
+
+mix$mixfish_fleet <- NA
+
+mix_1 <- c()
+
+for (i in (1:nrow(mix))) {
+  mixi <- mix[i, ]
+  
+  # 27.7.d ----
+  
+  if (mixi$fao_area %in% c("27.7.d")) {
+    
+    mixi$mixfish_fleet[mixi$metier_in == "TBB_CRU_16-31_0_0"] <- "TBB_CRU_16-31_0_0_all"
+    mixi$mixfish_fleet[mixi$metier_in == "TBB_CRU_70-99_0_0"] <- "TBB_CRU_70-99_0_0_all"
+    mixi$mixfish_fleet[mixi$metier_in == "TBB_DEF_>=120_0_0"] <- "TBB_DEF_>=120_0_0_all"
+    
+    mixi$mixfish_fleet[mixi$metier_in == "OTB_CRU_16-31_0_0"] <- "OTB_CRU_16-31_0_0_all"
+    mixi$mixfish_fleet[mixi$metier_in == "OTB_CRU_32-69_0_0"] <- "OTB_CRU_32-69_0_0_all"
+    mixi$mixfish_fleet[mixi$metier_in == "OTB_DEF_32-69_0_0"] <- "OTB_DEF_32-69_0_0_all" # Data from 1987-2024. This is a Norway Pout fishery. So we catch NOP in area 27.7.d?
+    mixi$mixfish_fleet[mixi$metier_in == "OTB_MCD_70-99_0_0"] <- "OTB_CRU_70-99_0_0_all"
+    mixi$mixfish_fleet[mixi$metier_in == "OTB_MCD_100-119_0_0"] <- "OTB_DEF_100-119_0_0_all" #Check - this is not according to the annex, since I have stolen the fleet from another area. Maybe this could be split into CRU / DEF instead of hardcoding.
+    mixi$mixfish_fleet[mixi$metier_in == "OTB_MCD_>=120_0_0"] <- "OTB_DEF_>=120_0_0_all"
+    
+    mixi$mixfish_fleet[mixi$metier_in %in% c("OTM_SPF_16-31_0_0", "OTB_SPF_>=120_0_0", "OTB_DEF_16-31_0_0")] <- "MIS_MIS_0_0_0_IBC" # Data from 1987-2024. OTB_SPF_>=120_0_0 is trips with 999 in mesh and catching PIL and BRS
+    mixi$mixfish_fleet[mixi$metier_in == "OTM_SPF_32-69_0_0"] <- "OTM_SPF_32-69_0_0_all" #Check - this is not according to the annex, since I have stolen the fleet from another area
+    
+    mixi$mixfish_fleet[substr(mixi$metier_in, 1, 3) == "LLS"] <- "LLS_FIF_0_0_0_all"
+    
+    mixi$mixfish_fleet[mixi$metier_in == "GNS_DEF_100-119_0_0"] <- "GNS_DEF_100-119_0_0_all"
+    mixi$mixfish_fleet[mixi$metier_in == "GNS_DEF_120-219_0_0"] <- "GNS_DEF_120-219_0_0_all"
+    mixi$mixfish_fleet[mixi$metier_in == "GNS_DEF_>=220_0_0"] <- "GNS_DEF_>=220_0_0_all"
+    
+    
+    mixi$mixfish_fleet[mixi$metier_in == "No_Matrix6"] <- "MIS_MIS_0_0_0_HC" #This is a bit rough, 
+    
+    
+    
+    
+  }
+  mix_1 <- rbind(mix_1, mixi)
+  }
+    
+
+test <-
+  distinct(filter(mix_1, fao_area %in% c("27.7.d")),
+           metier_level6_ret,
+           mixfish_fleet)
+
+
+
+fleet <- mix_1
+```
+
+
+```{r output, include = T}
+
+matrix_out <-
+  distinct(
+    ungroup(fleet),
+    fao_area,
+    metier_level6_ret,
+    # obs_at_sea_fleets_no_gns,
+    # obs_at_sea_fleets_gns,
+    # merged_metier_level6,
+    mixfish_fleet
+  )
+
+matrix_out
+
+# matrix_out <- rename(matrix_out, metier_level6 = metier_level6_ret)
+
+saveRDS(matrix_out, paste0(path_out, filename_out, ".rds"))
+write.csv(matrix_out, paste0(path_out, filename_out, ".csv"), row.names = F)
+
+```
+
+
