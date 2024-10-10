@@ -1,0 +1,52 @@
+---
+title: "Fleet, reference table, documentation"
+author: "Kirsten Birch Håkansson, DTU Aqua"
+date: "\today"
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include = F}
+
+knitr::opts_chunk$set(echo = TRUE, message = F, warnings = F)
+
+options(scipen = 999)
+
+path_out <- "Q:/mynd/SAS Library/fleet/analyses/area_7d/" 
+filename_out <- "area_7d"
+
+options(scipen = 999)
+
+library(haven)
+library(dplyr)
+library(lubridate)
+library(beepr)
+
+years <- c(1987:2024)
+
+
+```
+
+# Data
+Pick all trips with some landings from area 27.7.d
+
+```{r data}
+
+dat <- readRDS("Q:/mynd/SAS Library/fleet/analyses/area_7d/data_area_7d.rds")
+
+```
+
+
+# Test metier relation
+
+```{r}
+
+fleet_old <- readRDS("Q:/mynd/SAS Library/fleet/fleet_old_metiers.rds")
+
+dat_7d <- subset(dat, fao_area == "27.7.d")
+
+dat_1 <- left_join(dat_7d, fleet_old, by = c("fao_area" = "fao_area", "metier_level6_ret" = "metier_level6_ret"))
+
+```
+
