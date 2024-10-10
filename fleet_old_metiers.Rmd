@@ -53,6 +53,8 @@ fleet <- dfad_sum
 
 Also need a mixfish_fleet for saithe, haddock and cod
 
+The fleet are in principal coded from Q:/mynd/SAS Library/fleet/references/Fisheries_Data_call 2023_CoverLetter&Text_v2.pdf, if not this is msntioned below.
+
 ```{r}
 
 mix <-
