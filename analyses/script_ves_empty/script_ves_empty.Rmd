@@ -1,0 +1,49 @@
+---
+title: "Fleet, reference table, documentation"
+author: "Kirsten Birch Håkansson, DTU Aqua"
+date: "\today"
+output:
+  pdf_document: default
+---
+
+
+
+```{r setup, include = F}
+knitr::opts_chunk$set(echo = TRUE, message = F, warnings = F)
+
+library(dplyr)
+library(lubridate)
+
+options(scipen = 999)
+
+path_out <- "Q:/mynd/SAS Library/fleet/" 
+filename_out <- "fleet_old_metiers"
+
+library(dplyr)
+library(lubridate)
+
+years <- c(2022:2024)
+
+```
+
+# Data 
+
+Input a list of all metiers used 1987-2018
+
+```{r data, eval = T}
+
+
+# rdb <- read.csv("Q:/mynd/SAS Library/FiskeriAktiviteter/references/RDB/AreaCodeFACCodeRegion.csv")
+# 
+# #A bit of renaming and deletion of id's not needed presently
+# 
+# rdb <- select(rename(rdb, area = AreaCode, metier_lvl6 = FishingActivityCategoryEuropeanLvl6Code), area, metier_lvl6)
+
+dfad <- readRDS("Q:/mynd/SAS Library/fleet/data/metiers_exist_w_match_haul_2022_2024.rds")
+dfad_1 <- subset(dfad, metier_level_6_new_mrk == "Script_ves:")
+
+dfad_2 <- subset(dfad, match_alle %in% dfad_1$match_alle)
+
+dfad_1_sum <- summarise(group_by(dfad_1, year, redskb, maske), kg = sum(kg), trips = length(unique(match_alle)))
+
+```

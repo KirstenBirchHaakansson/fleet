@@ -120,7 +120,7 @@ for (i in (1:nrow(mix))) {
     
     # TBB
     mixi$mixfish_fleet[mixi$metier_in == "TBB_CRU_16-31_0_0"] <- "TBB_CRU_16-31_0_0_all"
-    mixi$mixfish_fleet[mixi$metier_in == "TBB_CRU_70-99_0_0"] <- "TBB_CRU_70-99_0_0_all"
+    mixi$mixfish_fleet[mixi$metier_in %in% c("TBB_CRU_70-99_0_0", "TBB_DEF_70-99_0_0")] <- "TBB_DEF_70-99_0_0_all"
     mixi$mixfish_fleet[mixi$metier_in == "TBB_DEF_>=120_0_0"] <- "TBB_DEF_>=120_0_0_all"
     
     # OTB
@@ -152,7 +152,7 @@ for (i in (1:nrow(mix))) {
     mixi$mixfish_fleet[substr(mixi$metier_in, 1, 3) == "LLS"] <- "LLS_FIF_0_0_0_all"
     
     # FPO
-    mixi$mixfish_fleet[mixi$metier_in == "FPO_CRU_>0_0_0"] <- "FPO_CRU_>0_0_0_all"
+    mixi$mixfish_fleet[mixi$metier_in == "FPO_CRU_>0_0_0"] <- "FPO_CRU_0_0_0_all"
     
     # SPF_32-69
     mixi$mixfish_fleet[mixi$metier_in == "OTM_SPF_32-69_0_0"] <- "OTM_SPF_32-69_0_0_all" 
@@ -170,7 +170,7 @@ for (i in (1:nrow(mix))) {
     #OTB_SPF_>=120_0_0 & OTM_SPF_>=120_0_0 are mainly from unsorted fisheries
     
     # DRB_MOL
-    mixi$mixfish_fleet[mixi$metier_in == "DRB_MOL_>=0_0_0"] <- "DRB_MOL_>=0_0_0_all"
+    mixi$mixfish_fleet[mixi$metier_in == "DRB_MOL_>=0_0_0"] <- "DRB_MOL_0_0_0_all"
     #Above, This is not according to the annex, since I have stolen the fleet from another area
     #In the past we would probably not have submitted this fleet, since it normally don't catch 
     #stocks under WGNSSK & MIXFISH. It has been included, since we now include all effort.

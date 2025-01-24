@@ -1,0 +1,218 @@
+---
+title: "Fleet, reference table, documentation"
+author: "Kirsten Birch Håkansson, DTU Aqua"
+date: "\today"
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include = F}
+
+knitr::opts_chunk$set(echo = TRUE, message = F, warnings = F)
+
+options(scipen = 999)
+
+path_out <- "Q:/mynd/SAS Library/fleet/analyses/area_4/" 
+filename_out <- "area_4"
+
+options(scipen = 999)
+
+library(dplyr)
+
+years <- c(1987:2024)
+
+
+```
+
+# Data
+Pick all trips with some landings from area 27.7.d
+
+Mixfish Species
+ANF (Lophius spp.)
+ANK (Lophius budegassa)
+BLL (Scophthalmus rhombus)
+CAA (Anarhichas lupus)
+COD (Gadus morhua)
+COE (Conger conger)
+DAB (Limanda limanda)
+FLE (Platichthys flesus)
+GUG (Eutrigla gurnardus)
+GUR (Aspitrigla cuculus)
+HAD (Melanogrammus aeglefinus)
+HAL (Hippoglossus hippoglossus)
+HER (Clupea harengus)
+HKE (Merluccius merluccius)
+HOM (Trachurus trachurus)
+LDB (Lepidorhombus boscii)
+LEM (Microstomus kitt)
+LEZ (Lepidorhombus spp.)
+LIN (Molva molva)
+MAC (Scomber scombrus)
+MEG (Lepidorhombus whiffiagonis)
+MON (Lophius piscatorius)
+NEP (Nephrops norvegicus) *** Note: Please also indicate the FU code here, i.e. NEP.FU.16, see "DC_Annex_WGMIXFISH2 Catch and Effort template" for more details.
+NOP (Trisopterus esmarkii)
+PLE (Pleuronectes platessa)
+POK (Pollachius virens)
+POL (Pollachius pollachius)
+RJU (Raja undulata)
+SKA (aggregated rays and skates: RJC, SKA, RAJ, RJA, RJB, RJC, RJE, RJF, RJH, RJI, RJM, RJN, RJO, RJR, SKX, SRX)
+SDV (aggregated dogfish: DGS, DGH, DGX, DGZ, SDV)
+SOL (Solea solea)
+SPR (Sprattus sprattus)
+TUR (Scophthalmus maximus)
+WHB (Micromesistius poutassou)
+WHG (Merlangius merlangus)
+All remaining species should be aggregated under 'OTH'.
+
+
+```{r data}
+
+dat <- readRDS("Q:/mynd/SAS Library/fleet/analyses/area_4/data_area_4.rds")
+
+ind_spp <- c("BRS", "BLH", "TBS", "PIL", "ANS", "HMK", "SPE", "ARG", "SIL", "MAK", "BMS")
+
+spp_mixfish <- c("HAT", "SLH", "TOR", "ISG", "SKR", "KUL", "KLM", "RTG", "DVH", "RSP", "MSJ", "LSJ", "TNG", "PHG", "HVL")
+
+#"SIL", "SPE"
+
+```
+
+# Diff old and new metiers
+```{r}
+
+
+
+```
+
+
+# OTB_SPF_>=120_0_0
+```{r}
+
+test_all <- subset(dat, metier_level6_ret == "OTB_SPF_>=120_0_0")
+
+test_all <-
+  arrange(test_all, -kg)
+test_all$pct_cum <- cumsum(test_all$kg)*100/sum(test_all$kg)
+
+knitr::kable(arrange(summarise(group_by(test_all, art), kg = sum(kg)), -kg))
+
+
+test_huc <- subset(dat, metier_level6_ret == "OTB_SPF_>=120_0_0" & !(art %in% ind_spp))
+
+test_huc <-
+  arrange(test_huc, -kg)
+test_huc$pct_cum <- cumsum(test_huc$kg)*100/sum(test_huc$kg)
+
+
+knitr::kable(arrange(summarise(group_by(test_huc, art), kg = sum(kg)), -kg))
+
+```
+
+
+# OTM_SPF_>=120_0_0
+```{r}
+
+test_all <- subset(dat, metier_level6_ret == "OTM_SPF_>=120_0_0")
+
+test_all <-
+  arrange(test_all, -kg)
+test_all$pct_cum <- cumsum(test_all$kg)*100/sum(test_all$kg)
+
+knitr::kable(arrange(summarise(group_by(test_all, art), kg = sum(kg)), -kg))
+
+
+test_huc <- subset(dat, metier_level6_ret == "OTM_SPF_>=120_0_0" & !(art %in% ind_spp))
+
+test_huc <-
+  arrange(test_huc, -kg)
+test_huc$pct_cum <- cumsum(test_huc$kg)*100/sum(test_huc$kg)
+
+
+knitr::kable(arrange(summarise(group_by(test_huc, art), kg = sum(kg)), -kg))
+
+```
+
+# No_Matrix6
+
+```{r}
+test_all <- subset(dat, metier_level6_ret == "No_Matrix6")
+
+test_all <-
+  arrange(test_all, -kg)
+test_all$pct_cum <- cumsum(test_all$kg)*100/sum(test_all$kg)
+
+knitr::kable(arrange(summarise(group_by(test_all, art), kg = sum(kg)), -kg))
+
+
+test_huc <- subset(dat, metier_level6_ret == "OTM_SPF_>=120_0_0" & !(art %in% ind_spp))
+
+test_huc <-
+  arrange(test_huc, -kg)
+test_huc$pct_cum <- cumsum(test_huc$kg)*100/sum(test_huc$kg)
+
+
+knitr::kable(arrange(summarise(group_by(test_huc, art), kg = sum(kg)), -kg))
+```
+
+# OTM_DEF_32-69_0_0
+```{r}
+test_all <- subset(dat, metier_level6_ret == "OTM_DEF_32-69_0_0")
+test_all <-
+  arrange(test_all, -kg)
+test_all$pct_cum <- cumsum(test_all$kg)*100/sum(test_all$kg)
+
+knitr::kable(arrange(summarise(group_by(test_all, art), kg = sum(kg)), -kg))
+
+
+test_huc <- subset(dat, metier_level6_ret == "OTM_SPF_>=120_0_0" & !(art %in% ind_spp))
+
+test_huc <-
+  arrange(test_huc, -kg)
+test_huc$pct_cum <- cumsum(test_huc$kg)*100/sum(test_huc$kg)
+
+
+knitr::kable(arrange(summarise(group_by(test_huc, art), kg = sum(kg)), -kg))
+```
+
+
+# Test metier relation
+
+```{r}
+
+fleet_old <- readRDS("Q:/mynd/SAS Library/fleet/fleet_old_metiers.rds")
+
+dat_4 <- subset(dat, substr(fao_area, 1, 5) == "27.4.")
+
+dat_1 <- left_join(dat_4, fleet_old, by = c("fao_area" = "fao_area", "metier_level6_ret" = "metier_level6_ret"))
+
+area_4_all <-
+  arrange(summarise(group_by(filter(dat_1, fao_area %in% c("27.4.a", "27.4.b", "27.4.c")),
+           metier_level6_ret,
+           mixfish_fleet),
+           kg = sum(kg),
+           trips = sum(trips)
+  ), -kg)
+
+area_4_all$pct_cum <- cumsum(area_4_all$kg)*100/sum(area_4_all$kg)
+
+
+dat_1 <- left_join(dat_4, fleet_old, by = c("fao_area" = "fao_area", "metier_level6_ret" = "metier_level6_ret"))
+
+area_4_huc_dat <- subset(dat_1, fao_area %in% c("27.4.a", "27.4.b", "27.4.c") & (art %in% spp_mixfish) & year > 2023)
+
+area_4_huc <-
+  arrange(summarise(group_by(filter(dat_1, fao_area %in% c("27.4.a", "27.4.b", "27.4.c") & (art %in% spp_mixfish) & year > 2023),
+           metier_level6_ret,
+           mixfish_fleet, 
+           metier_level_6_new,
+           metier_level_6_new_mrk),
+           kg = sum(kg),
+           trips = length(unique(match_alle))
+  ), -kg)
+
+area_4_huc$pct_cum <- cumsum(area_4_huc$kg)*100/sum(area_4_huc$kg)
+
+```
+
