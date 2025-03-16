@@ -17,12 +17,21 @@ metiers <- c()
 for (i in years) {
   dfad_0 <-
     readRDS(paste(
-      "Q:/dfad/data/Data/udvidet_data/dfad_udvidet",
+      "Q:/20-forskning/20-dfad/data/Data/udvidet_data/dfad_udvidet",
       i,
       ".rds",
       sep = ""
     ))
   dfad_0 <- mutate(dfad_0, year = year(ldato))
+  
+  # Add target species per trip
+  
+  kg_trip_art <- summarise(group_by(dfad_0, match_alle, art),  kg = sum(hel, na.rm = T), .groups = "drop")
+  kg_trip_art <- arrange(kg_trip_art, match_alle, -kg)
+  target <- slice(group_by(kg_trip_art, match_alle), 1)
+  target <- rename(target, "taget_spp_trip" = "art")
+  dfad_0 <- left_join(dfad_0, target)
+
   
   metiers_0 <-
     summarise(
@@ -34,6 +43,7 @@ for (i in years) {
         redskb,
         maske,
         species_group,
+        taget_spp_trip,
         metier_level6,
         metier_level6_ret,
         metier_ret_mrk,
@@ -67,4 +77,4 @@ metiers <- mutate(ungroup(metiers),
                     )
                   ))
 
-saveRDS(metiers, "Q:/mynd/SAS Library/fleet/data/metiers_exist.rds")
+saveRDS(metiers, "Q:/50-radgivning/02-mynd/SAS Library/fleet/data/metiers_exist.rds")
