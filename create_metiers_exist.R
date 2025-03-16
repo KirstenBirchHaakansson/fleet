@@ -26,10 +26,10 @@ for (i in years) {
   
   # Add target species per trip
   
-  kg_trip_art <- summarise(group_by(dfad_0, match_alle, art),  kg = sum(hel, na.rm = T), .groups = "drop")
-  kg_trip_art <- arrange(kg_trip_art, match_alle, -kg)
-  target <- slice(group_by(kg_trip_art, match_alle), 1)
-  target <- rename(target, "taget_spp_trip" = "art")
+  kg_trip_art <- summarise(group_by(dfad_0, match_alle, haul_id, art),  kg = sum(hel, na.rm = T), .groups = "drop")
+  kg_trip_art <- arrange(kg_trip_art, match_alle, haul_id, -kg)
+  target <- slice(group_by(kg_trip_art, match_alle, haul_id), 1)
+  target <- rename(target, "target_spp_haul" = "art")
   dfad_0 <- left_join(dfad_0, target)
 
   
@@ -37,13 +37,15 @@ for (i in years) {
     summarise(
       group_by(
         dfad_0,
+        match_alle,
+        haul_id,
         year,
         dfadfvd_ret,
         fao_area,
         redskb,
         maske,
         species_group,
-        taget_spp_trip,
+        target_spp_haul,
         metier_level6,
         metier_level6_ret,
         metier_ret_mrk,
@@ -60,6 +62,8 @@ for (i in years) {
     )
   
   metiers <- bind_rows(metiers, ungroup(metiers_0))
+  
+  print(i)
 }
 
 beep(sound = 8)
@@ -77,4 +81,4 @@ metiers <- mutate(ungroup(metiers),
                     )
                   ))
 
-saveRDS(metiers, "Q:/50-radgivning/02-mynd/SAS Library/fleet/data/metiers_exist.rds")
+saveRDS(metiers, paste0("Q:/50-radgivning/02-mynd/SAS Library/fleet/data/metiers_exist_", min(years), "_", max(years),".rds"))
