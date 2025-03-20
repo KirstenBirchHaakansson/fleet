@@ -70,15 +70,19 @@ beep(sound = 8)
 
 unique(metiers$fao_area)
 
-metiers <- mutate(ungroup(metiers),
-                  fao_area = ifelse(
-                    dfadfvd_ret == "3D281",
-                    "27.3.d.28.1",
-                    ifelse(
-                      dfadfvd_ret %in% c("3D28", "3D282", "3D28_"),
-                      "27.3.d.28.2",
-                      fao_area
-                    )
-                  ))
+metiers$fao_area[dfad$dfadfvd_ret == "3D281"] <- "27.3.d.28.1"
+metiers$fao_area[dfad$dfadfvd_ret == "3D282"] <- "27.3.d.28.2"
+metiers$fao_area[dfad$dfadfvd_ret %in% c("3D28", "3D28_")] <- "27.3.d.28"
+
+# metiers <- mutate(ungroup(metiers),
+#                   fao_area = ifelse(
+#                     dfadfvd_ret == "3D281",
+#                     "27.3.d.28.1",
+#                     ifelse(
+#                       dfadfvd_ret %in% c("3D28", "3D282", "3D28_"),
+#                       "27.3.d.28.2",
+#                       fao_area
+#                     )
+#                   ))
 
 saveRDS(metiers, paste0("Q:/50-radgivning/02-mynd/SAS Library/fleet/data/metiers_exist_", min(years), "_", max(years),".rds"))
