@@ -70,9 +70,9 @@ beep(sound = 8)
 
 unique(metiers$fao_area)
 
-metiers$fao_area[dfad$dfadfvd_ret == "3D281"] <- "27.3.d.28.1"
-metiers$fao_area[dfad$dfadfvd_ret == "3D282"] <- "27.3.d.28.2"
-metiers$fao_area[dfad$dfadfvd_ret %in% c("3D28", "3D28_")] <- "27.3.d.28"
+metiers$fao_area[metiers$dfadfvd_ret == "3D281"] <- "27.3.d.28.1"
+metiers$fao_area[metiers$dfadfvd_ret == "3D282"] <- "27.3.d.28.2"
+metiers$fao_area[metiers$dfadfvd_ret %in% c("3D28", "3D28_")] <- "27.3.d.28"
 
 # metiers <- mutate(ungroup(metiers),
 #                   fao_area = ifelse(
