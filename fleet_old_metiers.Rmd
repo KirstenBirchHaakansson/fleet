@@ -35,7 +35,7 @@ years <- c(2015:2024)
 
 dfad <- readRDS(paste0(path_in, "metiers_exist_", min(years), "_", max(years),".rds"))
 
-dfad_sum <- summarise(group_by(dfad, fao_area, merged_metier_level6, metier_level6_ret, target_spp_haul, art), 
+dfad_sum <- summarise(group_by(dfad, fao_area, merged_metier_level6, metier_level6_ret, fdfmark, target_spp_haul, art), 
                       kg = sum(kg), trips = sum(trips))
 
 fleet <- dfad_sum
@@ -216,72 +216,74 @@ mix$mixfish_fleet[mix$fao_area %in% c("27.7.d") &
                     mix$metier_in == "No_Matrix6"] <- "MIS_MIS_0_0_0_HC"
 #Above, data from 1987-2024. This is a bit rough, but for most of the data it is True. There are two BRS / PIL trips that get this one
 
-# 27.4 ----
+# 27.4 & 27.6.a ----
+
+areas <- c("27.4.a", "27.4.b", "27.4.c", "27.6.a")
 
 # TBB
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "TBB_CRU_16-31_0_0"] <- "TBB_CRU_16-31_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in %in% c("TBB_CRU_70-99_0_0", "TBB_DEF_70-99_0_0")] <- "TBB_DEF_70-99_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "TBB_DEF_>=120_0_0"] <- "TBB_DEF_>=120_0_0_all"
 
 # OTB
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "OTB_CRU_16-31_0_0"] <- "OTB_CRU_16-31_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "OTB_CRU_32-69_0_0"] <- "OTB_CRU_32-69_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "OTB_DEF_32-69_0_0"] <- "OTB_DEF_32-69_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "OTB_MCD_70-99_0_0"] <- "OTB_CRU_70-99_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "OTB_MCD_100-119_0_0"] <- "OTB_DEF_100-119_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "OTB_MCD_>=120_0_0"] <- "OTB_DEF_>=120_0_0_all"
 
 # SDN
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in %in% c("SDN_DEF_>=120_0_0")] <- "SDN_DEF_>=120_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in %in% c("SDN_DEF_100-119_0_0")] <- "SDN_DEF_100-119_0_0_all"
 #Above, not sure SDN_DEF_100-119_0_0 is a mixfish fleet in the North sea, but the code is in the vocab
 #Before these two metiers were joined in >=120
 
 # SSC
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in %in% c("SSC_DEF_>=120_0_0")] <- "SSC_DEF_>=120_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in %in% c("SSC_DEF_100-119_0_0")] <- "SSC_DEF_100-119_0_0_all"
 #Above, not sure SDN_DEF_100-119_0_0 is a mixfish fleet in the North sea, but the code is in the vocab
 
 # GNS
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "GNS_DEF_90-99_0_0"] <- "GNS_DEF_90-99_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "GNS_DEF_100-119_0_0"] <- "GNS_DEF_100-119_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "GNS_DEF_120-219_0_0"] <- "GNS_DEF_120-219_0_0_all"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "GNS_DEF_>=220_0_0"] <- "GNS_DEF_>=220_0_0_all"
 
 # LLS
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     substr(mix$metier_in, 1, 3) == "LLS"] <- "LLS_FIF_0_0_0_all"
 
 # FPO
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "FPO_CRU_>0_0_0"] <- "FPO_CRU_0_0_0_all"
 
 # SPF_32-69
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "OTM_SPF_32-69_0_0"] <- "OTM_SPF_32-69_0_0_all"
 #Above, This is not according to the annex, since I have stolen the fleet from another area
 #In the past we would probably not have submitted this fleet, since it normally don't catch
 #stocks under WGNSSK & MIXFISH. It has been included, since we now include all effort.
 
 # IBC
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in %in% c(
                       "OTM_SPF_16-31_0_0",
                       "OTB_DEF_<16_0_0",
@@ -293,7 +295,7 @@ mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
 #OTB_SPF_>=120_0_0 & OTM_SPF_>=120_0_0 are mainly from unsorted fisheries
 
 # DRB_MOL
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "DRB_MOL_>=0_0_0"] <- "DRB_MOL_0_0_0_all"
 #Above, This is not according to the annex, since I have stolen the fleet from another area
 #In the past we would probably not have submitted this fleet, since it normally don't catch
@@ -301,7 +303,7 @@ mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
 
 
 # PS
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     substr(mix$metier_in, 1, 2) == "PS"] <- "PS"
 #Above, This is not according to the annex, since I have stolen the fleet from another AWG.
 #The fleet is not in the MIXFISH list
@@ -310,9 +312,9 @@ mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
 
 
 # All other
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     substr(mix$metier_in, 1, 3) == "No_"] <- "MIS_MIS_0_0_0_HC"
-mix$mixfish_fleet[mix$fao_area %in% c("27.4.a", "27.4.b", "27.4.c") &
+mix$mixfish_fleet[mix$fao_area %in% areas &
                     is.na(mix$mixfish_fleet)] <- "MIS_MIS_0_0_0_HC"
 
 
@@ -330,10 +332,10 @@ test_7d <-
     trips = sum(trips)
   )
 
-test_4 <-
+test_46a <-
   summarise(
     group_by(
-      subset(mix, fao_area %in% c("27.4.a", "27.4.b", "27.4.c")),
+      subset(mix, fao_area %in% areas),
       merged_metier_level6,
       metier_level6_ret,
       mixfish_fleet
@@ -354,11 +356,21 @@ test_3a <-
     trips = sum(trips)
   )
 
+# mark fdf
+fdf <- mix
+unique(fdf$fdfmark)
 
+fdf$mixfish_fleet[fdf$fdfmark == "FDF" & fdf$mixfish_fleet %in% c("OTB_CRU_90-119_0_0_all")] <- "OTB_CRU_90-119_0_0_all_FDF"
+fdf$mixfish_fleet[fdf$fdfmark == "FDF" & fdf$mixfish_fleet %in% c("OTB_DEF_>=120_0_0_all")] <- "OTB_DEF_>=120_0_0_all_FDF"
 
-fleet <- ungroup(mix)
+# Slut
+fleet <- ungroup(fdf)
 
 # rm(mix, mix_1)
+
+
+
+
 ```
 
 # wgbfas_dem_effort_fleet
@@ -495,6 +507,7 @@ matrix_out <-
     ungroup(fleet),
     fao_area,
     metier_level6_ret,
+    fdfmark,
     # obs_at_sea_fleets_no_gns,
     # obs_at_sea_fleets_gns,
     # merged_metier_level6,
