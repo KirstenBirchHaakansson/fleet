@@ -110,7 +110,7 @@ mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
 mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
                     mix$metier_in == "OTB_MCD_90-119_0_0"] <- "OTB_CRU_90-119_0_0_all"
 mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
-                    mix$metier_in == "OTB_MCD_>=120_0_0"] <- "OTB_DEF_>=120_0_0"
+                    mix$metier_in == "OTB_MCD_>=120_0_0"] <- "OTB_DEF_>=120_0_0_all"
 mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
                     mix$metier_in == "OTB_CRU_70-89_2_35"] <- "OTB_CRU_70-89_2_35_all"
 
@@ -362,6 +362,8 @@ unique(fdf$fdfmark)
 
 fdf$mixfish_fleet[fdf$fdfmark == "FDF" & fdf$mixfish_fleet %in% c("OTB_CRU_90-119_0_0_all")] <- "OTB_CRU_90-119_0_0_all_FDF"
 fdf$mixfish_fleet[fdf$fdfmark == "FDF" & fdf$mixfish_fleet %in% c("OTB_DEF_>=120_0_0_all")] <- "OTB_DEF_>=120_0_0_all_FDF"
+
+
 
 # Slut
 fleet <- ungroup(fdf)
