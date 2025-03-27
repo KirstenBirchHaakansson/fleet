@@ -108,6 +108,9 @@ mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
 mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
                     mix$metier_in == "OTB_CRU_32-69_0_0"] <- "OTB_CRU_32-69_0_0_all"
 mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
+                    mix$metier_in == "OTB_DEF_32-69_0_0"] <- "OTB_DEF_32-69_0_0_all"
+# Above - this is a new one. I'm not super happy about this fishery
+mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
                     mix$metier_in == "OTB_MCD_90-119_0_0"] <- "OTB_CRU_90-119_0_0_all"
 mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
                     mix$metier_in == "OTB_MCD_>=120_0_0"] <- "OTB_DEF_>=120_0_0_all"
@@ -188,14 +191,14 @@ mix$mixfish_fleet[mix$fao_area %in% c("27.7.d") &
                     mix$metier_in == "OTB_MCD_>=120_0_0"] <- "OTB_DEF_>=120_0_0_all"
 
 # IBC
-mix$mixfish_fleet[mix$fao_area %in% c("27.7.d") &
+mix$mixfish_fleet[mix$fao_area %in% c("27.7.d", "27.7.e") &
                     mix$metier_in %in% c("OTM_SPF_16-31_0_0",
                                          "OTB_SPF_>=120_0_0",
                                          "OTB_DEF_16-31_0_0")] <- "MIS_MIS_0_0_0_IBC"
 #Above, Data from 1987-2024. OTB_SPF_>=120_0_0 is trips with 999 in mesh and catching PIL and BRS
 
 # SPF_32-69
-mix$mixfish_fleet[mix$fao_area %in% c("27.7.d") &
+mix$mixfish_fleet[mix$fao_area %in% c("27.7.d", "27.7.e") &
                     mix$metier_in == "OTM_SPF_32-69_0_0"] <- "OTM_SPF_32-69_0_0_all"
 #Above, This is not according to the annex, since I have stolen the fleet from another area
 
@@ -218,7 +221,7 @@ mix$mixfish_fleet[mix$fao_area %in% c("27.7.d") &
 
 # 27.4 & 27.6.a ----
 
-areas <- c("27.4.a", "27.4.b", "27.4.c", "27.6.a")
+areas <- c("27.4.a", "27.4.b", "27.4.c", "27.6.a", "27.6.b")
 
 # TBB
 mix$mixfish_fleet[mix$fao_area %in% areas &
@@ -235,6 +238,7 @@ mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "OTB_CRU_32-69_0_0"] <- "OTB_CRU_32-69_0_0_all"
 mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "OTB_DEF_32-69_0_0"] <- "OTB_DEF_32-69_0_0_all"
+# Above - this is a new one
 mix$mixfish_fleet[mix$fao_area %in% areas &
                     mix$metier_in == "OTB_MCD_70-99_0_0"] <- "OTB_CRU_70-99_0_0_all"
 mix$mixfish_fleet[mix$fao_area %in% areas &
