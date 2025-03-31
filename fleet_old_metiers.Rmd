@@ -506,6 +506,76 @@ otm <- subset(dfad, merged_metier_level6 == "OTM_SPF_16-104_0_0")
 ```
 
 
+# WGDEEP
+
+```{r}
+
+deep <-
+  mutate(
+    fleet,
+    metier_in = ifelse(
+      is.na(merged_metier_level6) | merged_metier_level6 == "",
+      metier_level6_ret ,
+      merged_metier_level6
+    )
+  )
+
+deep$wgdeep_fleet <- substr(deep$metier_in, 1, 7) 
+
+deep$wgdeep_fleet[substr(deep$metier_in, 1, 3) == "No_"] <- "MIS_MIS"
+
+deep$wgdeep_fleet[deep$metier_in %in% c("OTB_MCD_70-99_0_0", "OTB_MCD_90-119_0_0")] <- "OTB_CRU"
+deep$wgdeep_fleet[deep$metier_in %in% c("OTB_MCD_>=120_0_0", "OTB_MCD_100-119_0_0")] <- "OTB_DEF"
+deep$wgdeep_fleet[substr(deep$metier_in, 1, 3) == "PS_"] <- "PS"
+
+deep$wgdeep_fleet[deep$metier_in %in% c(
+                      "OTM_SPF_16-31_0_0",
+                      "OTB_DEF_<16_0_0",
+                      "OTB_DEF_16-31_0_0",
+                      "OTB_SPF_>=120_0_0",
+                      "OTM_SPF_>=120_0_0"
+                    )] <- "MIS_MIS_0_0_0_IBC"
+#Above, data from 1987-2024. SPF_>=120_0_0 is trips mainly with 999 in mesh and catching SPF
+#OTB_SPF_>=120_0_0 & OTM_SPF_>=120_0_0 are mainly from unsorted fisheries
+
+test_wgdeep <-
+  summarise(
+    group_by(
+      deep,
+      merged_metier_level6,
+      metier_level6_ret,
+      wgdeep_fleet
+    ),
+    kg = sum(kg)
+  )
+
+
+test_deep_uniq <- distinct(deep, wgdeep_fleet)
+
+ic_fleets <- icesVocab::getCodeList("IC_FleetName")
+
+test_wgdeep_allowed <- left_join(ungroup(test_wgdeep), ic_fleets, by =  c("wgdeep_fleet" = "Key"))
+
+test_wgdeep_not_allowed <- subset(test_wgdeep_allowed, is.na(Description))
+
+deep$wgdeep_fleet[deep$wgdeep_fleet %in% test_wgdeep_not_allowed$wgdeep_fleet] <- "MIS_MIS"
+
+test_wgdeep <-
+  summarise(
+    group_by(
+      deep,
+      merged_metier_level6,
+      metier_level6_ret,
+      wgdeep_fleet
+    ),
+    kg = sum(kg)
+  )
+
+fleet <- deep
+```
+
+
+
 ```{r output, include = T}
 
 matrix_out <-
@@ -518,7 +588,8 @@ matrix_out <-
     # obs_at_sea_fleets_gns,
     # merged_metier_level6,
     mixfish_fleet,
-    wgbfas_dem_effort_fleet
+    wgbfas_dem_effort_fleet,
+    wgdeep_fleet
   )
 
 matrix_out
