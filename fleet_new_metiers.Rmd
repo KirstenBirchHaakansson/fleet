@@ -35,8 +35,21 @@ years <- c(2015:2024)
 
 dfad <- readRDS(paste0(path_in, "metiers_exist_", min(years), "_", max(years),".rds"))
 
-dfad_sum <- summarise(group_by(dfad, fao_area, merged_metier_level6, metier_level6_ret, fdfmark, target_spp_haul, art), 
-                      kg = sum(kg), trips = sum(trips))
+
+dfad_sum <- summarise(
+  group_by(
+    dfad,
+    fao_area,
+    metier_level_6_new,
+    merged_metier_level6,
+    metier_level6_ret,
+    fdfmark,
+    target_spp_haul,
+    art
+  ),
+  kg = sum(kg),
+  trips = sum(trips)
+)
 
 fleet <- dfad_sum
 
@@ -77,12 +90,9 @@ The fleet are in principal coded from Q:/mynd/SAS Library/fleet/references/Fishe
 mix <-
   mutate(
     fleet,
-    metier_in = ifelse(
-      is.na(merged_metier_level6) | merged_metier_level6 == "",
-      metier_level6_ret ,
-      merged_metier_level6
+    metier_in = metier_level_6_new
     )
-  )
+  
 
 # 27.3.a ----
 
@@ -330,6 +340,7 @@ test_7d <-
       subset(mix, fao_area %in% c("27.7.d")),
       merged_metier_level6,
       metier_level6_ret,
+      metier_level_6_new,
       mixfish_fleet
     ),
     kg = sum(kg),
@@ -342,6 +353,7 @@ test_46a <-
       subset(mix, fao_area %in% areas),
       merged_metier_level6,
       metier_level6_ret,
+      metier_level_6_new,
       mixfish_fleet
     ),
     kg = sum(kg),
@@ -354,6 +366,7 @@ test_3a <-
       subset(mix, fao_area %in% c("27.3.a.20", "27.3.a.21")),
       merged_metier_level6,
       metier_level6_ret,
+      metier_level_6_new,
       mixfish_fleet
     ),
     kg = sum(kg),
