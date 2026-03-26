@@ -1,0 +1,99 @@
+---
+title: "Fleet, reference table, documentation"
+author: "Kirsten Birch Håkansson, DTU Aqua"
+date: "/today"
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include = F}
+
+library(dplyr)
+library(lubridate)
+
+knitr::opts_chunk$set(echo = TRUE, message = F, warnings = F)
+
+options(scipen = 999)
+
+path_out <- "Q:/50-radgivning/02-mynd/SAS Library/fleet/analyses/old_vs_new_metier/" 
+filename_out <- "old_vs_new_metier"
+
+options(scipen = 999)
+
+library(dplyr)
+
+years <- c(2023:2024)
+
+old_ref <- readRDS("Q:/50-radgivning/02-mynd/SAS Library/fleet/fleet_old_metiers.rds")
+new_ref <- readRDS("Q:/50-radgivning/02-mynd/SAS Library/fleet/fleet_new_metiers.rds")
+
+```
+
+```{r}
+
+dfad <- c()
+
+for (i in years) {
+  
+  dfad_0 <-
+    readRDS(paste(
+      "Q:/20-forskning/20-dfad/data/Data/udvidet_data/dfad_udvidet",
+      i,
+      ".rds",
+      sep = ""
+    ))
+  
+  dfad_0 <- mutate(dfad_0, year = year(ldato))
+  
+  dfad_sum <-
+    summarise(
+      group_by(
+        dfad_0,
+        # fid,
+        # match,
+        # match_alle,
+        # haul_id,
+        year,
+        dfadfvd_ret,
+        fao_area,
+        redskb,
+        maske,
+        species_group,
+        metier_level6,
+        metier_level6_ret,
+        metier_ret_mrk,
+        merged_metier_level6,
+        metier_level_6_new,
+        metier_level_6_new_mrk,
+        fdfmark,
+        art,
+        ltilst,
+        anvend
+      ),
+      kg = sum(hel, na.rm = T),
+      trips = length(unique(match_alle))
+    )
+  
+  dfad <- bind_rows(dfad, dfad_sum)
+}
+```
+
+```{r}
+
+dfad_old <- left_join(dfad, old_ref) 
+
+dfad_old_sum <- summarise(group_by(dfad_old, fao_area, mixfish_fleet), ton_old = round(sum(kg/1000), digits = 1))
+
+
+dfad_new <- left_join(dfad, new_ref) 
+
+dfad_new_sum <- summarise(group_by(dfad_new, fao_area, mixfish_fleet), ton_new = round(sum(kg/1000), digits = 1))
+
+comb <- full_join(dfad_old_sum, dfad_new_sum)
+
+comb$diff_ton <- comb$ton_new-comb$ton_old
+comb$diff_pct <- round((comb$ton_new-comb$ton_old)*100 / comb$ton_old, digits = 1)
+
+```
+
