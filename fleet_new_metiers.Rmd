@@ -20,7 +20,7 @@ path_in <- "Q:/50-radgivning/02-mynd/SAS Library/fleet/data/"
 path_out <- "Q:/50-radgivning/02-mynd/SAS Library/fleet/" 
 filename_out <- "fleet_new_metiers"
 
-years <- c(2015:2024)
+years <- c(2015:2025)
 ```
 
 
@@ -35,11 +35,12 @@ years <- c(2015:2024)
 
 dfad <- readRDS(paste0(path_in, "metiers_exist_", min(years), "_", max(years),".rds"))
 
-dfad <- subset(dfad, year %in% c(2023, 2024))
+dfad <- subset(dfad, year %in% c(2024, 2025))
 
 dfad_sum <- summarise(
   group_by(
     dfad,
+    year,
     fao_area,
     redskb,
     maske,
@@ -130,7 +131,8 @@ mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
 mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
                     substr(mix$metier_in, 1, 11) %in% c("OTB_MCD_90-", "OTB_MCD_100",
                                                         "OTB_CRU_90-", "OTB_CRU_100",
-                                                        "OTB_DEF_90-", "OTB_DEF_100")] <- "OTB_CRU_90-119_0_0_all"
+                                                        "OTB_DEF_90-", "OTB_DEF_100",
+                                                        "OTB_DWS_90-", "OTB_DWS_100")] <- "OTB_CRU_90-119_0_0_all"
 mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
                     mix$metier_in %in%  c("OTB_MCD_>=120_0_0", "OTB_DEF_>=120_0_0", "OTB_CRU_>=120_0_0", "OTM_DEF_>=120_0_0")] <- "OTB_DEF_>=120_0_0_all"
 mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
@@ -151,8 +153,9 @@ mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
 
 #SDN & SSC
 mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
-                    mix$metier_in %in% c("SDN_DEF_90-119_0_0", "SDN_DEF_>=120_0_0", "SDN_DEF_90-99_0_0", "SDN_DEF_100-119_0_0")] <- "SDN_DEF_>=120_0_0_all"
+                    mix$metier_in %in% c("SDN_DEF_16-31_0_0","SDN_DEF_90-119_0_0", "SDN_DEF_>=120_0_0", "SDN_DEF_90-99_0_0", "SDN_DEF_100-119_0_0")] <- "SDN_DEF_>=120_0_0_all"
 #Above - I would like to remove SDN_DEF_90-119_0_0 from this, when we decided on this the fleet was insignificant.
+#Above - add SDN_DEF_16-31_0_0 this is a weird metier showing up in 2025, but it look like a flatfish fishery 
 #This has changed
 mix$mixfish_fleet[mix$fao_area %in% c("27.3.a.20", "27.3.a.21") &
                     mix$metier_in %in% c("SSC_DEF_90-119_0_0", "SSC_DEF_>=120_0_0",
@@ -422,7 +425,7 @@ unique(fdf$fdfmark)
 fdf$mixfish_fleet[fdf$fdfmark == "FDF" & fdf$mixfish_fleet %in% c("OTB_CRU_90-119_0_0_all")] <- "OTB_CRU_90-119_0_0_all_FDF"
 fdf$mixfish_fleet[fdf$fdfmark == "FDF" & fdf$mixfish_fleet %in% c("OTB_DEF_>=120_0_0_all")] <- "OTB_DEF_>=120_0_0_all_FDF"
 
-
+fleet <- fdf
 
 # Slut
 # fleet <- ungroup(fdf)
@@ -563,7 +566,7 @@ otm <- subset(dfad, merged_metier_level6 == "OTM_SPF_16-104_0_0")
 
 # WGDEEP
 
-```{r, eval = F}
+```{r, eval = T}
 
 deep <-
   mutate(
@@ -644,7 +647,7 @@ matrix_out <-
     # merged_metier_level6,
     mixfish_fleet,
     # wgbfas_dem_effort_fleet,
-    # wgdeep_fleet
+    wgdeep_fleet
   )
 
 matrix_out
