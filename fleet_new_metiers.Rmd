@@ -29,8 +29,8 @@ metier_ind <- c(
   "OTB_DEF_<16_0_0",
   "OTB_DEF_16-31_0_0",
   "OTM_DEF_16-31_0_0",
-  "OTB_SPF_>=120_0_0",
-  "OTM_SPF_>=120_0_0",
+  # "OTB_SPF_>=120_0_0",
+  # "OTM_SPF_>=120_0_0",
   "OTM_DEF_<16_0_0",
   "OTB_SPF_<16_0_0",
   "OTM_SPF_<16_0_0",
@@ -574,11 +574,7 @@ otm <- subset(dfad, merged_metier_level6 == "OTM_SPF_16-104_0_0")
 deep <-
   mutate(
     fleet,
-    metier_in = ifelse(
-      is.na(merged_metier_level6) | merged_metier_level6 == "",
-      metier_level6_ret ,
-      merged_metier_level6
-    )
+    metier_in = metier_level_6_new
   )
 
 deep$wgdeep_fleet <- substr(deep$metier_in, 1, 7) 
@@ -597,12 +593,12 @@ test_wgdeep <-
   summarise(
     group_by(
       deep,
-      merged_metier_level6,
-      metier_level6_ret,
+      metier_level_6_new,
       wgdeep_fleet
     ),
     kg = sum(kg)
   )
+
 
 
 test_deep_uniq <- distinct(deep, wgdeep_fleet)
@@ -619,8 +615,7 @@ test_wgdeep <-
   summarise(
     group_by(
       deep,
-      merged_metier_level6,
-      metier_level6_ret,
+      metier_level_6_new,
       wgdeep_fleet
     ),
     kg = sum(kg)
